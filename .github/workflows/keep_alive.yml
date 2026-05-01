@@ -1,0 +1,31 @@
+name: Keep Repository Active
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"   # once per week at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update keepalive file
+        run: |
+          date > .keepalive
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .keepalive
+          git commit -m "Keepalive update" || echo "No changes to commit"
+
+      - name: Push changes
+        run: |
+          git push
