@@ -9,7 +9,10 @@ from .log import log_time
 from config import service
 
 CONFIG = service.get_config()
-LOG = logging.getLogger()
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 
 
 # ============================================================================
@@ -43,7 +46,7 @@ class MongoDatabase:
         self.garmin = my_db['GARMIN_DATA']
         self.current_data = pd.DataFrame(data=list(self.garmin.find()))
         self.max_date  = pd.to_datetime(self.current_data['DATE']).max()
-        LOG.info(msg=f'Max date in DB: {self.max_date}')
+        logging.info(msg=f'Max date in DB: {self.max_date}')
         return self
     
     # ------------------------------------------------------------------------
@@ -65,7 +68,7 @@ class MongoDatabase:
             self.garmin.insert_many(
                 documents=data_list, bypass_document_validation=True
             )
-            LOG.info(msg=f'Add {len(my_df)} to DB')
+            logging.info(msg=f'Add {len(my_df)} to DB')
         else:
-            LOG.info(msg=f'Data not updated, nothing added to DB')
+            logging.info(msg=f'Data not updated, nothing added to DB')
         return None

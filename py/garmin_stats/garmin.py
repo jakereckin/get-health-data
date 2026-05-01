@@ -6,7 +6,11 @@ from config.service import get_config
 
 from .log import  log_time
 
-LOG = logging.getLogger()
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
 CONFIG = get_config()
 
 
@@ -29,7 +33,7 @@ class GarminStats:
     # ------------------------------------------------------------------------
     @log_time
     def call_api(self, date) -> 'GarminStats':
-        LOG.info(msg=f'Getting data for {date}')
+        logging.info(msg=f'Getting data for {date}')
 
         self.user_summary = self.api.get_user_summary(cdate=date)
         self.hr_data = self.api.get_heart_rates(cdate=date)
