@@ -1,0 +1,36 @@
+name: Run Python Script
+
+on:
+  workflow_dispatch:        # manual run
+  schedule:
+    - cron: "0 /6 * * *"   # every 6 hours (optional — remove if not needed)
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    env:
+      API_KEY: ${{ secrets.API_KEY }}   # inject your secret
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+      GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+      MONGO_CLUSTER: ${{ secrets.MONGO_CLUSTER }}
+      MONGO_PATH: ${{ secrets.MONGO_PATH }}
+
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run script
+        run: |
+          python run.py
