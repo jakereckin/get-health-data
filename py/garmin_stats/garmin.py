@@ -2,7 +2,6 @@ import pandas as pd
 from garminconnect import Garmin
 import logging
 import os
-from config.service import get_config
 
 from .log import  log_time
 
@@ -11,7 +10,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
-CONFIG = get_config()
+
 
 
 # ============================================================================
@@ -35,10 +34,19 @@ class GarminStats:
     def call_api(self, date) -> 'GarminStats':
         logging.info(msg=f'Getting data for {date}')
 
+        logging.info(msg='Getting user summary')
         self.user_summary = self.api.get_user_summary(cdate=date)
+
+        logging.info(msg='Getting heart rate data')
         self.hr_data = self.api.get_heart_rates(cdate=date)
+
+        logging.info(msg='Getting stats')
         self.stats = self.api.get_stats(cdate=date)
+
+        logging.info(msg='Getting water data')
         self.water = self.api.get_hydration_data(cdate=date)
+
+        logging.info(msg='Getting runs')
         self.runs = self.api.get_activities_by_date(
             startdate=date, enddate=date, activitytype='running'
         )
@@ -124,7 +132,8 @@ class GarminStats:
                   / 60
                   / (self.runs[0].get('distance')/1609.34))]
             )
-
+        logging.info(msg=f'Finished processing data for {date}')
+        logging.info(msg=f'Added {len(data_to_frame)} rows to frame')
         self.data_to_frame = data_to_frame
         return self 
     

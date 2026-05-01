@@ -6,9 +6,7 @@ import pandas as pd
 
 from .log import log_time
 
-from config import service
 
-CONFIG = service.get_config()
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
@@ -63,6 +61,7 @@ class MongoDatabase:
             my_df_test[my_df_test['exists'] == 'right_only']
                       .drop(columns=['exists'])
         )
+        logging.info(msg=f'New data to add to DB: {len(my_df)}')
         if len(my_df) > 0:
             data_list = my_df.to_dict(orient='records')
             self.garmin.insert_many(
