@@ -4,10 +4,10 @@ import logging
 import os
 import pandas as pd
 
-from .log import log_time, setup_log
+from .log import log_time
+
 from config import service
 
-setup_log()
 CONFIG = service.get_config()
 LOG = logging.getLogger()
 

@@ -4,9 +4,8 @@ import logging
 import os
 from config.service import get_config
 
-from .log import setup_log, log_time
+from .log import  log_time
 
-setup_log()
 LOG = logging.getLogger()
 CONFIG = get_config()
 
@@ -21,8 +20,8 @@ class GarminStats:
     @log_time
     def get_api(self) -> 'GarminStats':
         self.api = Garmin(
-            email=os.get('GARMIN_EMAIL'), 
-            password=os.get('GARMIN_PASSWORD')
+            email=os.getenv('GARMIN_EMAIL'), 
+            password=os.getenv('GARMIN_PASSWORD')
         )
         self.api.login()
         return self
